@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buket Bunga Bermekaran</title>
+<style>
+  html,body{margin:0;height:100%;background:#efece7;overflow:hidden}
+  svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .sway{animation:sway var(--dur,6s) ease-in-out infinite alternate;transform-origin:400px 1000px}
+  @keyframes sway{from{transform:rotate(0deg)}to{transform:rotate(var(--a,1deg))}}
+  .flutter{animation:flutter 4.5s ease-in-out infinite alternate;transform-origin:0 0}
+  @keyframes flutter{from{transform:rotate(-1.4deg)}to{transform:rotate(1.8deg)}}
+  #replay{
+    position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+    font:italic 15px Georgia,'Times New Roman',serif;letter-spacing:.08em;color:#8a5b66;
+    background:rgba(255,255,255,.55);border:1px solid rgba(138,91,102,.35);border-radius:999px;
+    padding:8px 22px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity 1.2s ease,background .3s;
+    backdrop-filter:blur(4px)
+  }
+  #replay.show{opacity:1;pointer-events:auto}
+  #replay:hover{background:rgba(255,255,255,.85)}
+</style>
+</head>
+<body>
+<svg id="stage" viewBox="0 0 800 1100" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- kelopak: gradien dari pangkal (bawah) ke ujung (atas) -->
+    <linearGradient id="gLily"  x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#f6c6b8"/><stop offset=".35" stop-color="#f7b4c4"/><stop offset=".8" stop-color="#f2a0b6"/><stop offset="1" stop-color="#ee86a3"/></linearGradient>
+    <linearGradient id="gLilyB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#f3b3b3"/><stop offset=".5" stop-color="#f4a8bd"/><stop offset="1" stop-color="#e9759a"/></linearGradient>
+    <linearGradient id="gTulip" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e98199"/><stop offset=".5" stop-color="#f3a3b4"/><stop offset="1" stop-color="#fad0d8"/></linearGradient>
+    <linearGradient id="gTulipB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#dd6f8c"/><stop offset=".5" stop-color="#ec92a8"/><stop offset="1" stop-color="#f6bccb"/></linearGradient>
+    <linearGradient id="gSun"  x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#d9890f"/><stop offset="1" stop-color="#fbd04a"/></linearGradient>
+    <linearGradient id="gSunB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#c9790c"/><stop offset="1" stop-color="#eeb12c"/></linearGradient>
+    <linearGradient id="gBes"  x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e6a000"/><stop offset="1" stop-color="#ffd94f"/></linearGradient>
+    <linearGradient id="gBesB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#d48f00"/><stop offset="1" stop-color="#f2bd2a"/></linearGradient>
+    <linearGradient id="gBell" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e3ecff"/><stop offset=".3" stop-color="#8fb0f5"/><stop offset="1" stop-color="#3b62d6"/></linearGradient>
+    <linearGradient id="gGlad" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff1c9"/><stop offset=".22" stop-color="#fcd0c4"/><stop offset=".65" stop-color="#f7a8b8"/><stop offset="1" stop-color="#f292a6"/></linearGradient>
+    <linearGradient id="gGladC" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffe2a8"/><stop offset=".25" stop-color="#fcae92"/><stop offset=".7" stop-color="#f2686a"/><stop offset="1" stop-color="#e24b52"/></linearGradient>
+    <linearGradient id="gBud" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#86b062"/><stop offset=".5" stop-color="#f4a28f"/><stop offset="1" stop-color="#f08a8a"/></linearGradient>
+    <linearGradient id="gAster" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#b4615d"/><stop offset=".6" stop-color="#d98f88"/><stop offset="1" stop-color="#ecbcb2"/></linearGradient>
+    <!-- daun: gradien horizontal -->
+    <linearGradient id="gLeaf"  x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7aa461"/><stop offset="1" stop-color="#3c6b3a"/></linearGradient>
+    <linearGradient id="gLeafB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#86bd55"/><stop offset="1" stop-color="#2c7529"/></linearGradient>
+    <linearGradient id="gLeafD" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#93ad98"/><stop offset="1" stop-color="#4b6f5d"/></linearGradient>
+    <radialGradient id="gCenter" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="#6b4222"/><stop offset=".75" stop-color="#43260f"/><stop offset="1" stop-color="#2a150a"/></radialGradient>
+    <linearGradient id="gRibbon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8d4da"/><stop offset="1" stop-color="#e3a0ae"/></linearGradient>
+    <radialGradient id="gBg" cx=".5" cy=".45" r=".75"><stop offset="0" stop-color="#f7f4ef"/><stop offset="1" stop-color="#e6e1d9"/></radialGradient>
+  </defs>
+
+  <rect x="-3000" y="-3000" width="6800" height="7100" fill="url(#gBg)"/>
+  <g id="bouquet"></g>
+  <g id="ribbon"></g>
+</svg>
+<button id="replay">Ulangi</button>
+
+<script>
+(function(){
+const NS='http://www.w3.org/2000/svg';
+const STAG=600;                       // jeda antar bunga (ms)
+
+/* ---------- helper ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const el=(tag,attrs,parent)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e};
+const anim=(e,frames,opts)=>{e.style.transformOrigin='0 0';return e.animate(frames,Object.assign({fill:'both',easing:'cubic-bezier(.22,.8,.3,1)'},opts))};
+/* grup posisi (atribut transform) -> grup dalam yang dianimasikan */
+const pet=(parent,tf)=>{const p=el('g',tf?{transform:tf}:{},parent);return el('g',{},p)};
+const pop=(e,delay,dur,s0=.05,r0=0,easing)=>anim(e,
+  [{transform:`rotate(${r0}deg) scale(${s0})`,opacity:0},{transform:'rotate(0deg) scale(1)',opacity:1}],
+  {delay,duration:dur,easing:easing||'cubic-bezier(.2,.85,.25,1.05)'});
+const f1=n=>n.toFixed(1);
+
+function bezier(P0,P1,P2){
+  return t=>{const u=1-t;
+    const x=u*u*P0[0]+2*u*t*P1[0]+t*t*P2[0], y=u*u*P0[1]+2*u*t*P1[1]+t*t*P2[1];
+    const dx=2*u*(P1[0]-P0[0])+2*t*(P2[0]-P1[0]), dy=2*u*(P1[1]-P0[1])+2*t*(P2[1]-P1[1]);
+    return {x,y,ang:Math.atan2(dy,dx)*180/Math.PI};};
+}
+
+function leaf(g,pt,ang,L,W,fill,delay,dur=1000){
+  const p=el('g',{transform:`translate(${f1(pt.x)},${f1(pt.y)}) rotate(${f1(ang)})`},g);
+  const a=el('g',{},p);
+  el('path',{d:`M0,0 C${L*.12},${-W*.9} ${L*.55},${-W*1.1} ${L},0 C${L*.55},${W*.5} ${L*.14},${W*.55} 0,0Z`,
+    fill:`url(#${fill})`,stroke:'#2e5a30','stroke-opacity':.4,'stroke-width':.8},a);
+  el('path',{d:`M2,0 Q${L*.5},${-W*.12} ${L*.94},0`,fill:'none',stroke:'#eaf3cf','stroke-opacity':.45,'stroke-width':1},a);
+  pop(a,delay,dur,.02,-14,'cubic-bezier(.25,.8,.3,1)');
+}
+
+/* ---------- kepala bunga ---------- */
+function lilyHead(h,t0,rnd){
+  const D='M0,0 C-26,-20 -38,-62 -12,-92 C-6,-100 8,-104 16,-94 C36,-62 28,-24 0,0Z';
+  [1,3,5,0,2,4].forEach((i,k)=>{
+    const a=i*60+(rnd()-.5)*14, sc=.92+rnd()*.18;
+    const w=pet(h,`rotate(${f1(a)}) scale(${(sc*(.95+rnd()*.12)).toFixed(2)},${sc.toFixed(2)})`);
+    el('path',{d:D,fill:i%2?'url(#gLilyB)':'url(#gLily)',stroke:'#d2587a','stroke-opacity':.55,'stroke-width':1.1,'stroke-linejoin':'round'},w);
+    el('path',{d:'M0,-6 C3,-40 4,-70 3,-94',fill:'none',stroke:'#d85c80','stroke-opacity':.3,'stroke-width':1.3},w);
+    for(let j=0;j<9;j++){const y=14+rnd()*52,x=(rnd()-.5)*(10+y*.28);
+      el('ellipse',{cx:f1(x),cy:f1(-y),rx:(1.2+rnd()*.8).toFixed(1),ry:(1.8+rnd()*1.2).toFixed(1),fill:'#9b2447','fill-opacity':.7},w);}
+    pop(w,t0+k*120,1300,.05,(i%2?-22:22));
+  });
+  el('circle',{r:5,fill:'#cfe08c'},h);
+  const st=el('g',{},h);
+  for(let i=0;i<6;i++){
+    const a=(-50+i*20+(rnd()-.5)*8)*Math.PI/180, len=44+rnd()*14;
+    const ex=Math.sin(a)*len, ey=-Math.cos(a)*len;
+    el('path',{d:`M0,0 Q${f1(ex*.4)},${f1(ey*.55+6)} ${f1(ex)},${f1(ey)}`,fill:'none',stroke:'#c9a26a','stroke-width':1.3,'stroke-linecap':'round'},st);
+    el('ellipse',{cx:f1(ex),cy:f1(ey),rx:2.6,ry:6,fill:'#8e3b1f',transform:`rotate(${f1(a*180/Math.PI)} ${f1(ex)} ${f1(ey)})`},st);
+  }
+  pop(st,t0+900,1100,.05,0);
+  return 2300;
+}
+
+function tulipHead(h,t0,rnd){
+  const D='M-20,2 C-31,-26 -25,-60 0,-88 C25,-60 31,-26 20,2 C8,9 -8,9 -20,2Z';
+  const sk={stroke:'#d45c78','stroke-opacity':.4,'stroke-width':.8,'stroke-linejoin':'round'};
+  const mk=(grad,fin,from,delay,extra)=>{
+    const w=pet(h);
+    el('path',Object.assign({d:D,fill:`url(#${grad})`},sk),w);
+    if(extra)extra(w);
+    anim(w,[{transform:from,opacity:0},{transform:fin,opacity:1}],{delay:t0+delay,duration:1500,easing:'cubic-bezier(.22,.8,.3,1.04)'});
+  };
+  mk('gTulipB','rotate(-15deg) scale(.92,.98)','rotate(0deg) scale(.5,.6)',0);
+  mk('gTulipB','rotate(15deg) scale(.92,.98)','rotate(0deg) scale(.5,.6)',120);
+  mk('gTulipB','rotate(0deg) scale(.7,.96)','rotate(0deg) scale(.4,.5)',60);
+  mk('gTulip','rotate(0deg) scale(1,1)','rotate(0deg) scale(.55,.6)',220,w=>{
+    el('path',{d:'M-8,-6 C-14,-30 -10,-55 -1,-76 C-4,-50 -3,-28 4,-6Z',fill:'#fff','fill-opacity':.28},w);
+    el('path',{d:'M0,-86 C-2,-50 -3,-20 0,2',fill:'none',stroke:'#d85c80','stroke-opacity':.3,'stroke-width':1},w);
+  });
+  return 1900;
+}
+
+function sunHead(h,t0,rnd,o){
+  const ring=(n,len,wid,inner,off,fill,delay)=>{
+    for(let i=0;i<n;i++){
+      const a=i*360/n+off+(rnd()-.5)*4, l=len*(.93+rnd()*.14);
+      const w=pet(h,`rotate(${f1(a)})`);
+      el('path',{d:`M0,${-inner} C${-wid},${-inner-l*.25} ${-wid*.9},${-inner-l*.75} 0,${-inner-l} C${wid*.9},${-inner-l*.75} ${wid},${-inner-l*.25} 0,${-inner}Z`,
+        fill:`url(#${fill})`,stroke:o.stroke,'stroke-opacity':.7,'stroke-width':1,'stroke-linejoin':'round'},w);
+      el('path',{d:`M0,${-inner-4} L0,${-inner-l*.72}`,fill:'none',stroke:o.vein,'stroke-opacity':.4,'stroke-width':.8},w);
+      pop(w,t0+delay+i*(900/n),1000,.05,-25);
+    }
+  };
+  ring(o.n,o.len*.92,o.wid,o.inner,180/o.n,o.fillB,0);
+  ring(o.n,o.len,o.wid,o.inner,0,o.fill,250);
+  const c=pet(h);
+  el('circle',{r:o.cr,fill:'url(#gCenter)',stroke:'#2b160a','stroke-width':1.2},c);
+  const cnt=o.dots;
+  for(let i=1;i<cnt;i++){
+    const r=o.cr*.92*Math.sqrt(i/cnt), th=i*2.39996;
+    el('circle',{cx:f1(Math.cos(th)*r),cy:f1(Math.sin(th)*r),r:(o.cr/26*1.3).toFixed(2),fill:i%5?'#24120a':'#9a6a38','fill-opacity':.75},c);
+  }
+  pop(c,t0+500,900,.05,0);
+  return 2300;
+}
+
+function bellFlower(parent,x,y,rot,s,t0,rnd){
+  const pos=el('g',{transform:`translate(${f1(x)},${f1(y)}) rotate(${rot}) scale(${s})`},parent);
+  const D='M0,0 C-24,-12 -35,-44 -16,-57 C-7,-62 7,-62 16,-57 C35,-44 24,-12 0,0Z';
+  for(let k=0;k<5;k++){
+    const a=k*72+(rnd()-.5)*8, w=pet(pos,`rotate(${f1(a)})`);
+    el('path',{d:D,fill:'url(#gBell)',stroke:'#2f50bd','stroke-opacity':.5,'stroke-width':.8,'stroke-linejoin':'round'},w);
+    el('path',{d:'M0,-8 C1,-28 1,-42 0,-54',fill:'none',stroke:'#dfe9ff','stroke-opacity':.5,'stroke-width':1},w);
+    pop(w,t0+k*110,950,.05,-16);
+  }
+  const c=pet(pos);
+  el('circle',{r:7,fill:'#eef3ff',stroke:'#9db6ee','stroke-width':.8},c);
+  for(let k=0;k<5;k++){const a=k*72*Math.PI/180;
+    el('circle',{cx:f1(Math.sin(a)*10),cy:f1(-Math.cos(a)*10),r:1.5,fill:'#fff'},c);}
+  pop(c,t0+420,700,.05,0);
+}
+function bellHead(h,t0,rnd){
+  [[-6,-70,6,1],[-50,-30,-42,.86],[44,-26,38,.92]].forEach(([x,y,r,s],i)=>{
+    const p=el('path',{d:`M0,0 Q${f1(x*.2)},${f1(y*.7)} ${x},${y}`,fill:'none',stroke:'#4f7d5c','stroke-width':2.2,'stroke-linecap':'round',pathLength:1,'stroke-dasharray':1},h);
+    p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{delay:t0+i*330,duration:600,fill:'both',easing:'ease-out'});
+    bellFlower(h,x,y,r,s,t0+300+i*330,rnd);
+  });
+  [[22,-92,24],[-30,-84,-28]].forEach(([x,y,r],i)=>{
+    const p=el('path',{d:`M0,0 Q${f1(x*.3)},${f1(y*.6)} ${x},${y}`,fill:'none',stroke:'#4f7d5c','stroke-width':1.8,'stroke-linecap':'round',pathLength:1,'stroke-dasharray':1},h);
+    p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{delay:t0+900+i*200,duration:500,fill:'both',easing:'ease-out'});
+    const b=pet(h,`translate(${x},${y}) rotate(${r})`);
+    el('path',{d:'M0,0 C-7,-6 -7,-20 0,-27 C7,-20 7,-6 0,0Z',fill:'#3d62d2',stroke:'#2a45a8','stroke-opacity':.5,'stroke-width':.7},b);
+    pop(b,t0+1100+i*200,700,.05,0);
+  });
+  return 2200;
+}
+
+function asterHead(h,t0,rnd){
+  [{n:15,len:54,w:6.5,span:84,d:260},{n:13,len:44,w:6,span:76,d:130},{n:9,len:33,w:5.5,span:64,d:0}].forEach(r=>{
+    for(let i=0;i<r.n;i++){
+      const a=-r.span+2*r.span*i/(r.n-1)+(rnd()-.5)*5, len=r.len*(.9+rnd()*.2), w=r.w;
+      const p=pet(h,`rotate(${f1(a)})`);
+      el('path',{d:`M0,-12 C${-w},-24 ${-w*1.05},${-len*.7} ${-w*.5},${-len} L${-w*.2},${-len+5} L0,${-len} L${w*.2},${-len+5} L${w*.5},${-len} C${w*1.05},${-len*.7} ${w},-24 0,-12Z`,
+        fill:'url(#gAster)',stroke:'#a4504d','stroke-opacity':.35,'stroke-width':.6},p);
+      pop(p,t0+r.d+Math.abs(a)*5,900,.1,-a*.7);
+    }
+  });
+  const c=pet(h);
+  el('path',{d:'M-10,4 C-14,-6 -9,-18 0,-24 C9,-18 14,-6 10,4 C4,8 -4,8 -10,4Z',fill:'#87a468',stroke:'#5e7e48','stroke-width':.8},c);
+  el('path',{d:'M-5,2 Q-6,-10 0,-20 M5,2 Q6,-10 0,-20',fill:'none',stroke:'#c9dba5','stroke-opacity':.55,'stroke-width':.8},c);
+  pop(c,t0,600,.2,0);
+  return 1900;
+}
+
+function lavHead(h,t0,rnd,f){
+  const L=f.L||150, n=16, pal=['#8d68b6','#a584cf','#7a58a6','#b198d8','#9470bf'];
+  const D='M0,0 C-7,-3 -9,-15 0,-27 C9,-15 7,-3 0,0Z';
+  const core=el('path',{d:`M0,0 L0,${-L}`,stroke:'#8a9a62','stroke-width':2,fill:'none',pathLength:1,'stroke-dasharray':1},h);
+  core.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{delay:t0,duration:n*70,fill:'both',easing:'linear'});
+  for(let k=0;k<n;k++){
+    const fr=k/(n-1), y=-(6+fr*(L-18)), sc=1.05-.5*fr, ang=40-14*fr;
+    for(const side of [-1,1]){
+      const w=pet(h,`translate(${f1(side*1.5)},${f1(y)}) rotate(${f1(side*(ang+(rnd()-.5)*10))}) scale(${(sc*(.9+rnd()*.2)).toFixed(2)})`);
+      el('path',{d:D,fill:pal[(rnd()*pal.length)|0],stroke:'#5f4390','stroke-opacity':.45,'stroke-width':.7},w);
+      pop(w,t0+k*70+(side>0?35:0)+rnd()*30,800,.05,0);
+    }
+  }
+  const tb=pet(h,`translate(0,${-L-4}) scale(.6)`);
+  el('path',{d:D,fill:'#a07fcb',stroke:'#5f4390','stroke-opacity':.45,'stroke-width':.7},tb);
+  pop(tb,t0+n*70,700,.05,0);
+  return n*70+900;
+}
+
+function gladSpike(g,B,t0,dur,f,rnd){
+  const n=f.n, gr=f.coral?'gGladC':'gGlad';
+  const D='M0,0 C-22,-8 -31,-34 -17,-47 C-9,-53 -4,-48 0,-51 C4,-48 9,-53 17,-47 C31,-34 22,-8 0,0Z';
+  let end=0;
+  [[.9,1,.5],[.955,-1,.42],[1,0,.34]].forEach(([t,side,s])=>{
+    const pt=B(t), a=pt.ang*Math.PI/180;
+    const x=pt.x+side*5*(-Math.sin(a)), y=pt.y+side*5*Math.cos(a);
+    const b=pet(g,`translate(${f1(x)},${f1(y)}) rotate(${f1(pt.ang+90+side*18)}) scale(${s*(f.coral?1.2:1)})`);
+    el('path',{d:'M0,0 C-8,-6 -8,-22 0,-34 C8,-22 8,-6 0,0Z',fill:'url(#gBud)',stroke:'#c0605e','stroke-opacity':.45,'stroke-width':.8},b);
+    pop(b,t0+dur*t*.9+150,800,.05,0);
+    end=Math.max(end,t0+dur*t*.9+950);
+  });
+  for(let k=n-1;k>=0;k--){
+    const t=f.tS+f.tSp*(n>1?k/(n-1):0), sc=f.fs*(1-.45*(n>1?k/(n-1):0)), side=k%2?1:-1;
+    const pt=B(t), a=pt.ang*Math.PI/180, off=14*sc;
+    const x=pt.x+side*off*(-Math.sin(a)), y=pt.y+side*off*Math.cos(a);
+    const fl=el('g',{transform:`translate(${f1(x)},${f1(y)}) rotate(${f1(pt.ang+90+side*(30+rnd()*10))}) scale(${sc.toFixed(2)})`},g);
+    const base=t0+dur*t*.9+300+k*200;
+    for(let i=0;i<5;i++){
+      const a2=i*72+(rnd()-.5)*10, w=pet(fl,`rotate(${f1(a2)})`);
+      el('path',{d:D,fill:`url(#${gr})`,stroke:f.coral?'#c8404a':'#e07a92','stroke-opacity':.45,'stroke-width':.8,'stroke-linejoin':'round'},w);
+      el('path',{d:'M-8,-34 Q0,-40 8,-34',fill:'none',stroke:'#fff','stroke-opacity':.35,'stroke-width':1.2},w);
+      if(rnd()<.65)el('path',{d:'M-2,-7 Q0,-17 2,-26',fill:'none',stroke:'#a8284c','stroke-opacity':.8,'stroke-width':1.5,'stroke-linecap':'round'},w);
+      pop(w,base+i*80,1000,.05,-side*25);
+    }
+    const th=pet(fl);
+    el('ellipse',{rx:6,ry:7,fill:'#fff2c4','fill-opacity':.9},th);
+    pop(th,base+300,700,.05,0);
+    end=Math.max(end,base+1400);
+  }
+  return end-t0;
+}
+
+/* ---------- pita ---------- */
+function ribbon(g,t0){
+  const bx=400,by=928;
+  const band=(d,c,w,o)=>{const p=el('path',{d,fill:'none',stroke:c,'stroke-width':w,'stroke-linecap':'round','stroke-opacity':o,pathLength:1,'stroke-dasharray':1},g);
+    p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{delay:t0,duration:900,fill:'both',easing:'cubic-bezier(.4,.1,.3,1)'});};
+  band(`M345,${by-4} Q${bx},${by+30} 455,${by-4}`,'#c98394',30,.55);
+  band(`M345,${by-8} Q${bx},${by+26} 455,${by-8}`,'#edbcc5',28,1);
+  band(`M352,${by-16} Q${bx},${by+16} 448,${by-16}`,'#fff',5,.4);
+
+  const pos=el('g',{transform:`translate(${bx},${by+8})`},g);
+  const tailD='M-4,6 C-22,44 -52,84 -74,146 L-48,132 L-30,160 C-16,112 0,64 6,14Z';
+  const loopD='M0,0 C-30,-62 -104,-62 -112,-14 C-116,22 -44,30 0,0Z';
+  [[-1,'rotate(-6)'],[1,'scale(-1,1) rotate(-14)']].forEach(([s,tf],i)=>{
+    const fl=el('g',{transform:tf},pos), fw=el('g',{class:'flutter'},fl), a=el('g',{},fw);
+    el('path',{d:tailD,fill:'url(#gRibbon)',stroke:'#c47f90','stroke-opacity':.6,'stroke-width':.8,'stroke-linejoin':'round'},a);
+    el('path',{d:'M-2,16 C-18,54 -38,96 -52,136',fill:'none',stroke:'#fff','stroke-opacity':.35,'stroke-width':2},a);
+    anim(a,[{transform:'rotate(12deg) scale(.3,.05)',opacity:0},{transform:'rotate(0deg) scale(1,1)',opacity:1}],
+      {delay:t0+1250+i*120,duration:1300,easing:'cubic-bezier(.2,.8,.25,1.08)'});
+  });
+  [[1,0],[-1,90]].forEach(([s,d])=>{
+    const w=pet(pos,`scale(${s},1)`);
+    el('path',{d:loopD,fill:'url(#gRibbon)',stroke:'#c47f90','stroke-opacity':.6,'stroke-width':.8,'stroke-linejoin':'round'},w);
+    el('path',{d:'M-8,-2 C-40,-34 -84,-34 -94,-12',fill:'none',stroke:'#c98394','stroke-opacity':.55,'stroke-width':2.2,'stroke-linecap':'round'},w);
+    el('path',{d:'M-14,-10 C-44,-42 -86,-44 -98,-22',fill:'none',stroke:'#fff','stroke-opacity':.4,'stroke-width':1.6,'stroke-linecap':'round'},w);
+    pop(w,t0+1000+d,1200,.05,-10);
+  });
+  const k=pet(pos);
+  el('ellipse',{rx:17,ry:15,fill:'#e4a2b0',stroke:'#c47f90','stroke-opacity':.6,'stroke-width':.8},k);
+  el('ellipse',{cx:-4,cy:-4,rx:7,ry:5,fill:'#fff','fill-opacity':.35},k);
+  pop(k,t0+900,700,.1,0);
+  return t0+2700;
+}
+
+/* ---------- susunan buket (belakang -> depan) ---------- */
+const FL=[
+  {type:'glad',rank:3,at:[265,215],n:5,fs:.85,tS:.6,tSp:.36,bend:-10,stem:['#7ea35c',6],
+    leaves:[[.08,-1,210,15],[.16,1,190,13],[.3,-1,150,11]],leafAng:14,leafFill:'gLeaf'},
+  {type:'glad',coral:true,rank:5,at:[545,250],n:3,fs:1.1,tS:.64,tSp:.3,bend:12,stem:['#7ea35c',6],
+    leaves:[[.08,1,200,14],[.18,-1,170,12],[.3,1,130,10]],leafAng:14,leafFill:'gLeaf'},
+  {type:'lav',rank:10,at:[404,455],L:175,stem:['#7f9a5c',3],leaves:[[.2,-1,100,5],[.35,1,90,5]],leafAng:22,leafFill:'gLeafD'},
+  {type:'lav',rank:13,at:[168,575],L:140,bend:-50,stem:['#7f9a5c',3],leaves:[[.2,-1,100,5],[.35,1,90,5]],leafAng:22,leafFill:'gLeafD'},
+  {type:'lav',rank:14,at:[642,570],L:140,bend:50,stem:['#7f9a5c',3],leaves:[[.2,1,100,5],[.35,-1,90,5]],leafAng:22,leafFill:'gLeafD'},
+  {type:'aster',rank:7,at:[338,458],stem:['#9aa27a',3],leaves:[[.5,-1,52,8],[.7,1,46,7]],leafFill:'gLeaf'},
+  {type:'aster',rank:8,at:[486,436],s:1.05,stem:['#9aa27a',3],leaves:[[.5,1,52,8],[.7,-1,46,7]],leafFill:'gLeaf'},
+  {type:'lily',rank:0,at:[282,565],stem:['#6f8f4a',5],leaves:[[.4,-1,95,11],[.6,1,90,11],[.78,-1,80,10]],leafFill:'gLeaf'},
+  {type:'lily',rank:1,at:[530,595],s:.95,stem:['#6f8f4a',5],leaves:[[.4,1,95,11],[.6,-1,90,11],[.78,1,80,10]],leafFill:'gLeaf'},
+  {type:'bell',rank:11,at:[138,700],stem:['#5d8a6b',3.5],leaves:[[.5,-1,70,16],[.75,1,64,15]],leafFill:'gLeafD'},
+  {type:'bell',rank:12,at:[668,712],stem:['#5d8a6b',3.5],leaves:[[.5,1,70,16],[.75,-1,64,15]],leafFill:'gLeafD'},
+  {type:'tulip',rank:4,at:[318,760],stem:['#a2b23a',7],leaves:[[.12,-1,140,26],[.3,1,120,22]],leafAng:26,leafFill:'gLeafB'},
+  {type:'tulip',rank:2,at:[388,732],stem:['#a2b23a',7],leaves:[[.14,1,140,26],[.34,-1,120,22]],leafAng:26,leafFill:'gLeafB'},
+  {type:'tulip',rank:6,at:[458,745],stem:['#a2b23a',7],leaves:[[.12,-1,130,24],[.3,1,115,20]],leafAng:26,leafFill:'gLeafB'},
+  {type:'tulip',rank:9,at:[522,780],stem:['#a2b23a',7],leaves:[[.12,1,125,24]],leafAng:28,leafFill:'gLeafB'},
+  {type:'sun',rank:15,at:[212,842],s:.85,stem:['#6b8c3a',5],leaves:[[.55,-1,90,24],[.75,1,80,21]],leafAng:30,leafFill:'gLeaf',
+    o:{n:20,len:66,wid:15,inner:24,cr:30,dots:75,fill:'gSun',fillB:'gSunB',stroke:'#b87510',vein:'#fff'}},
+  {type:'sun',rank:16,at:[598,858],s:1,stem:['#6b8c3a',4],leaves:[[.5,1,70,14],[.7,-1,60,12]],leafAng:30,leafFill:'gLeaf',
+    o:{n:13,len:46,wid:8.5,inner:12,cr:15,dots:28,fill:'gBes',fillB:'gBesB',stroke:'#b27c00',vein:'#fff'}},
+  {type:'sun',rank:17,at:[528,895],s:.8,stem:['#6b8c3a',4],leaves:[[.5,-1,60,12]],leafAng:30,leafFill:'gLeaf',
+    o:{n:13,len:46,wid:8.5,inner:12,cr:15,dots:28,fill:'gBes',fillB:'gBesB',stroke:'#b27c00',vein:'#fff'}},
+];
+
+/* ---------- membangun satu bunga ---------- */
+function makeFlower(f,root,rnd){
+  const g=el('g',{},root);
+  g.classList.add('sway');
+  g.style.setProperty('--a',((rnd()<.5?-1:1)*(.5+rnd()*.9)).toFixed(2)+'deg');
+  g.style.setProperty('--dur',(5+rnd()*3).toFixed(1)+'s');
+  const t0=f.rank*STAG+250;
+  const P0=[400+(rnd()-.5)*30,1010], P2=f.at;
+  const P1=[P0[0]+(P2[0]-P0[0])*.12+(f.bend||0), P2[1]+(P0[1]-P2[1])*.45];
+  const B=bezier(P0,P1,P2);
+  const len=Math.hypot(P2[0]-P0[0],P2[1]-P0[1]), dur=800+len*.85;
+
+  const sp=el('path',{d:`M${f1(P0[0])},${P0[1]} Q${f1(P1[0])},${f1(P1[1])} ${P2[0]},${P2[1]}`,fill:'none',
+    stroke:f.stem[0],'stroke-width':f.stem[1],'stroke-linecap':'round',pathLength:1,'stroke-dasharray':1},g);
+  sp.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{delay:t0,duration:dur,fill:'both',easing:'cubic-bezier(.4,.1,.3,1)'});
+
+  (f.leaves||[]).forEach(([t,side,L,W])=>{
+    const pt=B(t);
+    leaf(g,pt,pt.ang+side*((f.leafAng||38)+(1-t)*20),L,W,f.leafFill||'gLeaf',t0+dur*t,1000);
+  });
+
+  if(f.type==='glad'){
+    return t0+gladSpike(g,B,t0,dur,f,rnd);
+  }
+  const endAng=B(1).ang;
+  const hp=el('g',{transform:`translate(${P2[0]},${P2[1]}) rotate(${f1(endAng+90)}) scale(${f.s||1})`},g);
+  const bt=t0+dur*.8;
+  let d=0;
+  switch(f.type){
+    case 'lily':  d=lilyHead(hp,bt,rnd); break;
+    case 'tulip': d=tulipHead(hp,bt,rnd); break;
+    case 'sun':   d=sunHead(hp,bt,rnd,f.o); break;
+    case 'bell':  d=bellHead(hp,bt,rnd); break;
+    case 'aster': d=asterHead(hp,bt,rnd); break;
+    case 'lav':   d=lavHead(hp,bt,rnd,f); break;
+  }
+  return bt+d;
+}
+
+/* ---------- jalankan ---------- */
+const bouquet=document.getElementById('bouquet');
+const ribbonG=document.getElementById('ribbon');
+const btn=document.getElementById('replay');
+let timer=null;
+
+function build(){
+  clearTimeout(timer);
+  btn.classList.remove('show');
+  bouquet.innerHTML=''; ribbonG.innerHTML='';
+  const rnd=mulberry32(11);
+  let maxEnd=0;
+  FL.forEach(f=>{maxEnd=Math.max(maxEnd,makeFlower(f,bouquet,rnd));});
+  const end=ribbon(ribbonG,maxEnd-600);   // pita muncul paling akhir
+  timer=setTimeout(()=>btn.classList.add('show'),end+300);
+}
+btn.addEventListener('click',build);
+build();
+})();
+</script>
+</body>
+</html>
